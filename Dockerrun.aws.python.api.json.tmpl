@@ -89,6 +89,24 @@
       ]
     },
     {
+      "name": "logentriesdocker",
+      "image": "${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/vivekyad4v-${ENVIRON}-led:latest",
+      "memory": 64,
+      "essential": true,
+      "linuxParameters": {
+            "capabilities": {
+               "drop": ["ALL"]
+        }
+       },
+      "mountPoints": [
+        {
+          "sourceVolume": "socket",
+          "containerPath": "/var/run/docker.sock",
+          "readOnly": true
+        }
+      ]
+    },
+    {
       "name": "logrotation",
       "image": "${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/vivekyad4v-${ENVIRON}-lr:latest",
       "memory": 64,
