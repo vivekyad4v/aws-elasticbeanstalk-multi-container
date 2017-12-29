@@ -1,0 +1,106 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "logs",
+      "host": {
+        "sourcePath": "/var/app/current/logs"
+      }
+    },
+    {
+      "name": "socket",
+      "host": {
+        "sourcePath": "/var/run/docker.sock"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "wsgi",
+      "image": "${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/vivekyad4v-${ENVIRON}-api:latest",
+      "essential": false,
+      "memory": ${WSGIM},
+      "portMappings": [
+        {
+          "hostPort": 8082,
+          "containerPort": 8082
+        }
+      ],
+      "command": [
+         "newrelic-admin",
+         "run-program",
+         "gunicorn",
+         "-b",
+         "0.0.0.0:8082",
+         "-w",
+         "3",
+         "--threads",
+         "10",
+ 	 "-t",
+         "150",
+         "--access-logfile=/rest/logs/gunicorn.log",
+         "--error-logfile=/rest/logs/gunicorn.log",
+         "VivekYad4v_v2.wsgi"
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "logs",
+          "containerPath": "/rest/logs",
+          "readOnly": false
+        }
+      ]
+    },
+     {
+      "name": "nginx",
+      "image": "${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/vivekyad4v-${ENVIRON}-web:latest",
+      "memory": ${NGINXM},
+      "essential": false,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8002
+        }
+      ],
+      "links": [
+        "wsgi"
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "logs",
+          "containerPath": "/rest/logs",
+          "readOnly": false
+        }
+      ]
+    },
+   {
+      "name": "logentries",
+      "image": "${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/vivekyad4v-${ENVIRON}-le:latest",
+      "memory": 256,
+      "essential": false,
+      "command": [
+        "/le-entry.sh"
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "logs",
+          "containerPath": "/rest/logs",
+          "readOnly": true
+        }
+      ]
+    },
+    {
+      "name": "logrotation",
+      "image": "${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/vivekyad4v-${ENVIRON}-lr:latest",
+      "memory": 64,
+      "essential": true,
+      "mountPoints": [
+        {
+          "sourceVolume": "logs",
+          "containerPath": "/rest/logs",
+          "readOnly": false
+        }
+      ]
+    }
+  ]
+}
+
