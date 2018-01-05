@@ -1,4 +1,4 @@
-[![](http://www.iconninja.com/files/646/741/224/original-linkedin-color-icon.png =100x20)](https://www.linkedin.com/in/vivekyad4v)
+[![](http://www.iconninja.com/files/646/741/224/original-linkedin-color-icon.png)](https://www.linkedin.com/in/vivekyad4v)
 
 ## AWS-ElasticBeantsalk-MultiContainer
 
