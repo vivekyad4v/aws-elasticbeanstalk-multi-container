@@ -1,5 +1,3 @@
-[![](http://www.iconninja.com/files/646/741/224/original-linkedin-color-icon.png)](https://www.linkedin.com/in/vivekyad4v)
-
 ## AWS-ElasticBeantsalk-MultiContainer
 
 Dockerrun version:'2', deploy docker images to ECS using ElasticBeanstalk
